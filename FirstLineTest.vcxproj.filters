@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Application.cpp">
+      <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>FileManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ParserManager.cpp">
+      <Filter>ParserManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>ThreadManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ParserWorker.cpp">
+      <Filter>ParserManager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Application">
+      <UniqueIdentifier>{9a3f51c0-bc35-4650-a0f5-26bc2fd0b71b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileManager">
+      <UniqueIdentifier>{09b0c9bd-9724-48a4-b548-7fc76d28e276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParserManager">
+      <UniqueIdentifier>{4d1566e4-a913-49ff-9643-a0d7ebb8c4da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadManager">
+      <UniqueIdentifier>{f8963f4c-d246-423f-9170-6142708c9dd0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>FileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ParserManager.h">
+      <Filter>ParserManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadManager.h">
+      <Filter>ThreadManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ParserWorker.h">
+      <Filter>ParserManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives.h" />
+  </ItemGroup>
+</Project>
