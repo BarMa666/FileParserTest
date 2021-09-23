@@ -1,24 +1,37 @@
 #pragma once
 
-class ParserWorker
+#include "Primitives.h"
+#include "IWorker.h"
+
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <atomic>
+#include <deque>
+
+class ParserWorker : public IWorker
 {
 public:
-    /*
-        Отсутпление на тему, как лучше организовать многопоточную работу парсера.
-        Возможные варианты:
-        1) Запускать один поток на обработку одного шаблона со всеми файлами
-        + Просто организовать - считал шаблоны, каждому сделал свой тред.
-        - Если мало шаблонов, то будут простаивать потоки
-        - Может быть, что тредам нужен будет доступ к одному файлу. Это нужно будет отслеживать.
-        ...
-        2) Запускать один поток на обработку одного файла
-        + Просто организовать - передаешь потоку имя файла, он с ним работает. Конфликтов не предвидится
-        - Нужно будет раскрыть менеджер файлов
-        ...
-        3) Можно считать данные с файла и передавать обработчику, либо включить
-    */
+	explicit ParserWorker(const TextTemplateT& _text_templates, size_t _threads_count) noexcept;
+	explicit ParserWorker(FileQueueT&& _file_queue, const TextTemplateT& _text_templates, size_t _threads_count) noexcept;
 
-    // void Parse();
-    // void selfTest();
+	virtual ~ParserWorker() noexcept;
+
+	ParserWorker(const ParserWorker& _request_worker) = delete;
+	ParserWorker operator=(const ParserWorker& _request_worker) = delete;
+	ParserWorker(ParserWorker&& _request_worker) = delete;
+	ParserWorker operator=(ParserWorker&& _request_worker) = delete;
+
+	void run(FileQueueT&& _file_queue, const TextTemplateT& _text_templates) override;
+	bool alive() const;
+	void start() noexcept;
+private:
+	std::mutex m_mutex;
+	std::condition_variable m_condition;
+	std::vector<std::thread> m_threads;
+	std::atomic<bool> m_alive;
+	std::deque<std::string> m_data;
+
+	void doWorkConditional(const TextTemplateT& _text_templates) noexcept;
 };
 

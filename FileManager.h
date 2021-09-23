@@ -1,15 +1,17 @@
 #pragma once
+#include "Primitives.h"
 
 #include <string>
 
 class FileManager
 {
 public:
-    FileManager() = default;
-    // void selfTest();
+	FileManager(const std::string& _root) noexcept;
+	FileQueueT getFiles() const noexcept;
+	std::vector<FileQueueT> getFileQueues(unsigned _threads_count) const noexcept;
+	uintmax_t getFilesSize() const noexcept;
 
-    void init(std::wstring&& _root);
 private:
-    std::wstring m_root;
+	std::string m_root;
 };
 
