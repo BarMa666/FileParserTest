@@ -31,7 +31,9 @@ AppRetCode Application::exec() noexcept
 		multiQueueAlgorithm(std::move(file_manager.getFileQueues(MAX_WORKERS_COUNT)));
 #endif
 		std::cout << "All done!\n";
+#ifndef _DEBUG
 		std::cin.get();
+#endif
 	}
 	catch (const std::exception& _ex)
 	{

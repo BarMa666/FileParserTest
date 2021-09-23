@@ -19,7 +19,7 @@ public:
 	MultiParserWorker(MultiParserWorker&&);
 	MultiParserWorker& operator=(MultiParserWorker&&) = delete;
 
-	void run(FileQueueT&& _file_queue, const TextTemplateT& _text_templates) override;
+	void run(FileQueueT&& _file_queue, const TextTemplateT& _text_templates);
 	bool isDone() const;
 
 	static unsigned workersCount();

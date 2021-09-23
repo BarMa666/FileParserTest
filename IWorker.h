@@ -13,11 +13,9 @@ public:
 	IWorker(IWorker&&);
 	IWorker& operator=(IWorker&&) = delete;
 
-	virtual void run(FileQueueT&& _file_queue, const TextTemplateT& _text_templates) = 0;
-
 protected:
 	const size_t MAX_TEMPLATE_LEN;
-	void ParseFile(const std::string& _file_name, const std::string& _temp_name, const TextTemplateT& _text_templates) const noexcept;
+	void parseFile(const std::string& _file_name, const std::string& _temp_name, const TextTemplateT& _text_templates) const noexcept;
 	void doWork(std::string&& _file_name, const TextTemplateT& _text_templates) noexcept;
 
 private:

@@ -13,7 +13,7 @@ IWorker::IWorker(IWorker&& _other)
 {
 }
 
-void IWorker::ParseFile(const std::string& _file_name, const std::string& _temp_name, const TextTemplateT& _text_templates) const noexcept
+void IWorker::parseFile(const std::string& _file_name, const std::string& _temp_name, const TextTemplateT& _text_templates) const noexcept
 {
 	FileHolder file(_file_name, std::ios_base::in);
 	FileHolder file_out(_temp_name, std::ios_base::out);
@@ -24,6 +24,9 @@ void IWorker::ParseFile(const std::string& _file_name, const std::string& _temp_
 		{
 			while (std::getline(file, line, '\0'))
 			{
+#ifdef _DEBUG
+				std::cout << line << "\n";
+#endif
 				for (const auto& [_template, _substitutor] : _text_templates)
 				{
 					replaceTemplates(line, _template, _substitutor);
@@ -98,7 +101,7 @@ void IWorker::doWork(std::string&& _file_name, const TextTemplateT& _text_templa
 	try
 	{
 		std::string temp_filename = _file_name.substr(0, _file_name.find_last_of('.')) + "_temp" + _file_name.substr(_file_name.find_last_of('.'));
-		ParseFile(_file_name, temp_filename, _text_templates);
+		parseFile(_file_name, temp_filename, _text_templates);
 		if (!std::filesystem::remove(_file_name))
 		{
 			std::cout << _file_name << " fail to remove\n";

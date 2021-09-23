@@ -12,7 +12,6 @@
 class ParserWorker : public IWorker
 {
 public:
-	explicit ParserWorker(const TextTemplateT& _text_templates, size_t _threads_count) noexcept;
 	explicit ParserWorker(FileQueueT&& _file_queue, const TextTemplateT& _text_templates, size_t _threads_count) noexcept;
 
 	virtual ~ParserWorker() noexcept;
@@ -22,7 +21,7 @@ public:
 	ParserWorker(ParserWorker&& _request_worker) = delete;
 	ParserWorker operator=(ParserWorker&& _request_worker) = delete;
 
-	void run(FileQueueT&& _file_queue, const TextTemplateT& _text_templates) override;
+	void init(const TextTemplateT& _text_templates);
 	bool alive() const;
 	void start() noexcept;
 private:
@@ -31,6 +30,7 @@ private:
 	std::vector<std::thread> m_threads;
 	std::atomic<bool> m_alive;
 	std::deque<std::string> m_data;
+	std::deque<std::string> m_queue;
 
 	void doWorkConditional(const TextTemplateT& _text_templates) noexcept;
 };

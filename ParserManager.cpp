@@ -22,6 +22,7 @@ AppRetCode ParserManager::Parse(FileQueueT&& _files, const TextTemplateT& _text_
 	try
 	{
 		ParserWorker parser(std::move(_files), _text_templates, MAX_WORKERS_COUNT);
+		parser.start();
 	}
 	catch (const std::exception& _ex)
 	{
