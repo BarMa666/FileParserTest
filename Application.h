@@ -1,4 +1,5 @@
 #pragma once
+#include "SettingsManager.h"
 
 class Application
 {
@@ -11,9 +12,12 @@ public:
     };
 
     Application() = default;
-    AppRetCode exec() noexcept;
+    AppRetCode exec(bool _reversed_settings = false) noexcept;
 #ifdef _TEST
     AppRetCode test();
 #endif
-
+private:
+    AppRetCode readSettigns(Settings& _settings, bool _reversed = false) const noexcept;
+    void compare() const;
+    void compare(const std::string& _lhs, const std::string& _rhs) const;
 };
