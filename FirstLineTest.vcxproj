@@ -80,30 +80,24 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="IWorker.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ParserManager.cpp" />
-    <ClCompile Include="MultiParserWorker.cpp" />
-    <ClCompile Include="ParserWorker.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="SettingsManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="FileManager.h" />
-    <ClInclude Include="IWorker.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ParserManager.h" />
-    <ClInclude Include="MultiParserWorker.h" />
-    <ClInclude Include="ParserWorker.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="SettingsManager.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CppLanguageStandard>c++17</CppLanguageStandard>
-      <PreprocessorDefinitions>_DEBUG;_TEST_ONE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;</PreprocessorDefinitions>
     </ClCompile>
     <PreBuildEvent>
       <Command>

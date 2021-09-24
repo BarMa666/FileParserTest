@@ -29,6 +29,11 @@ void Logger::logError(const std::string& _error)
 	Logger::instance().log(_error, Type::Error);
 }
 
+void Logger::logInfo(const std::string& _error)
+{
+	Logger::instance().log(_error, Type::Info);
+}
+
 void Logger::log(const std::string& _error, Type _type)
 {
 	std::lock_guard<std::mutex> lock(m_mu);

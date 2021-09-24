@@ -1,20 +1,19 @@
 #pragma once
-#include "Primitives.h"
-#include "SettingsManager.h"
-
-#include <string>
-#include <map>
 
 class Application
 {
 public:
+    enum AppRetCode
+    {
+        Ok,
+        Error,
+        NoSettings
+    };
+
     Application() = default;
     AppRetCode exec() noexcept;
-    // void selfTest();
+#ifdef _TEST
+    AppRetCode test();
+#endif
 
-private:
-    AppRetCode oneQueueAlgorithm(FileQueueT&& _file_queues);
-    AppRetCode multiQueueAlgorithm(std::vector<FileQueueT>&& _file_queues);
-
-    Settings m_settings;
 };

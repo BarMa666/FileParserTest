@@ -1,7 +1,11 @@
 #include "Application.h"
-#include "FileManager.h"
 #include "ParserManager.h"
+#include "SettingsManager.h"
 #include "Logger.h"
+
+#ifdef _TEST
+#include "Parser.h"
+#endif
 
 #include <iostream>
 #include <cassert>
@@ -10,26 +14,32 @@
 
 #define NO_LESS_THAN_ONE(x) (x == 0) ? 1 : x
 
-static SettingsManager g_settings_manager;
-
-AppRetCode Application::exec() noexcept
+Application::AppRetCode Application::exec() noexcept
 {
 	AppRetCode ret = AppRetCode::Ok;
 	try
 	{
-		m_settings = g_settings_manager.readSettings();
-		if (g_settings_manager.hasEmptySettings(m_settings))
+		SettingsManager settings_manager;
+		auto settings = settings_manager.readSettings();
+		if (settings_manager.hasEmptySettings(settings))
 		{
 			return AppRetCode::NoSettings;
 		}
-		FileManager file_manager(m_settings.root);
-		[[maybe_unused]] auto files_size = file_manager.getFilesSize();
-#ifdef _TEST_ONE
-		oneQueueAlgorithm(std::move(file_manager.getFiles()));
-#else
-		static const unsigned MAX_WORKERS_COUNT(NO_LESS_THAN_ONE(std::min(std::thread::hardware_concurrency(), m_settings.threads_count)) - 1);
-		multiQueueAlgorithm(std::move(file_manager.getFileQueues(MAX_WORKERS_COUNT)));
+		{
+			ParserManager parser(settings.threads_count, std::move(settings.text_templates));
+			parser.start();
+#ifdef _DEBUG
+			auto start = std::chrono::steady_clock::now();
 #endif
+			for (const auto& file_name : std::filesystem::recursive_directory_iterator(settings.root))
+			{
+				parser.put(std::move(file_name.path().string()));
+			}
+#ifdef _DEBUG
+			auto end = std::chrono::steady_clock::now();
+			std::cout << (end - start).count() << "\n";
+#endif
+		}
 		std::cout << "All done!\n";
 #ifndef _DEBUG
 		std::cin.get();
@@ -43,46 +53,15 @@ AppRetCode Application::exec() noexcept
 	return ret;
 }
 
-AppRetCode Application::oneQueueAlgorithm(FileQueueT&& _file_queues)
+#ifdef _TEST
+Application::AppRetCode Application::test()
 {
-	AppRetCode ret = AppRetCode::Ok;
-	try
-	{
-#ifdef _DEBUG
-		auto start = std::chrono::steady_clock::now();
-#endif
-		ParserManager parser(m_settings.threads_count);
-		ret = parser.Parse(std::move(_file_queues), m_settings.text_templates);
-#ifdef _DEBUG
-		auto end = std::chrono::steady_clock::now();
-		std::cout << (end - start).count() << "\n";
-#endif
-	}
-	catch (const std::exception& _ex)
-	{
-		Logger::logError(_ex.what());
-	}
-	return ret;
+	SettingsManager settings_manager;
+	auto settings = settings_manager.readSettings();
+	assert(!settings_manager.hasEmptySettings(settings));
+	auto text_templates = settings.text_templates;
+	Parser parser(std::move(ParserManager::getMaxTemplateSize(text_templates)));
+	parser.testParse();
+	return AppRetCode::Ok;
 }
-
-AppRetCode Application::multiQueueAlgorithm(std::vector<FileQueueT>&& _file_queues)
-{
-	AppRetCode ret = AppRetCode::Ok;
-	try
-	{
-#ifdef _DEBUG
-		auto start = std::chrono::steady_clock::now();
 #endif
-		ParserManager parser(m_settings.threads_count);
-		ret = parser.ParseMulti(std::move(_file_queues), m_settings.text_templates);
-#ifdef _DEBUG
-		auto end = std::chrono::steady_clock::now();
-		std::cout << (end - start).count() << "\n";
-#endif
-	}
-	catch (const std::exception& _ex)
-	{
-		Logger::logError(_ex.what());
-	}
-	return ret;
-}

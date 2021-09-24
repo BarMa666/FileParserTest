@@ -17,6 +17,7 @@ public:
 	};
 
 	static void logError(const std::string& _error);
+	static void logInfo(const std::string& _error);
 	void log(const std::string& _error, Type _type);
 
 	Logger(const Logger&) = delete;

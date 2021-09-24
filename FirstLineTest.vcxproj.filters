@@ -5,9 +5,6 @@
     <ClCompile Include="Application.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>FileManager</Filter>
-    </ClCompile>
     <ClCompile Include="ParserManager.cpp">
       <Filter>ParserManager</Filter>
     </ClCompile>
@@ -17,22 +14,13 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
-    <ClCompile Include="MultiParserWorker.cpp">
-      <Filter>Workers</Filter>
-    </ClCompile>
-    <ClCompile Include="ParserWorker.cpp">
-      <Filter>Workers</Filter>
-    </ClCompile>
-    <ClCompile Include="IWorker.cpp">
-      <Filter>Workers</Filter>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Worker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Application">
       <UniqueIdentifier>{9a3f51c0-bc35-4650-a0f5-26bc2fd0b71b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FileManager">
-      <UniqueIdentifier>{09b0c9bd-9724-48a4-b548-7fc76d28e276}</UniqueIdentifier>
     </Filter>
     <Filter Include="ParserManager">
       <UniqueIdentifier>{4d1566e4-a913-49ff-9643-a0d7ebb8c4da}</UniqueIdentifier>
@@ -43,16 +31,13 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{cfa66219-4d16-4134-af63-082f0c7beda3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Workers">
+    <Filter Include="Worker">
       <UniqueIdentifier>{0e65201f-6ec9-4b51-a266-9f36c06426fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
       <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>FileManager</Filter>
     </ClInclude>
     <ClInclude Include="ParserManager.h">
       <Filter>ParserManager</Filter>
@@ -64,14 +49,8 @@
     <ClInclude Include="Logger.h">
       <Filter>Logger</Filter>
     </ClInclude>
-    <ClInclude Include="MultiParserWorker.h">
-      <Filter>Workers</Filter>
-    </ClInclude>
-    <ClInclude Include="ParserWorker.h">
-      <Filter>Workers</Filter>
-    </ClInclude>
-    <ClInclude Include="IWorker.h">
-      <Filter>Workers</Filter>
+    <ClInclude Include="Parser.h">
+      <Filter>Worker</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

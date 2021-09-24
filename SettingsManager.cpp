@@ -3,6 +3,8 @@
 
 #include <cassert>
 #include <filesystem>
+#include <iostream>
+#include <algorithm>
 
 // Имя файла конфига настроек
 static const std::string CONFIG_FILENAME = "settings.conf";
