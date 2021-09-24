@@ -19,6 +19,8 @@ enum AppRetCode
 using TextTemplateT = std::map<std::string, std::string>;
 using FileQueueT = std::deque<std::string>;
 
+static const std::string TEST_POSTFIX = "_before";
+
 class FileHolder : public std::fstream
 {
 public:
