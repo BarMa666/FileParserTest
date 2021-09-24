@@ -19,27 +19,21 @@ void Parser::parse(std::string&& _file_name, const TextTemplateT& _text_template
 	try
 	{
 #ifdef _TEST
-		// есть префикс
 		if (_file_name.find(TEST_POSTFIX) != std::string::npos)
 		{	
-			// пропускаем 
 			return;
 		}
-		// нет префикса
 		else
 		{
 #endif
 			std::string temp_filename = _file_name.substr(0, _file_name.find_last_of('.')) + "_temp" + _file_name.substr(_file_name.find_last_of('.'));
-			// сортируем
 			if (parseFile(_file_name, temp_filename, _text_templates))
 			{
 #ifdef _TEST
 				std::string before_filename = _file_name.substr(0, _file_name.find_last_of('.')) + TEST_POSTFIX + _file_name.substr(_file_name.find_last_of('.'));
-				// смотрим есть ли уже с таким префиксом 
 				if (std::filesystem::exists(before_filename))
 				{
 #endif
-					// если есть, то переименовываем сортированного и текущего, сортированный удаляем
 					if (!std::filesystem::remove(_file_name))
 					{
 						std::cout << _file_name << " fail to remove\n";
@@ -49,7 +43,6 @@ void Parser::parse(std::string&& _file_name, const TextTemplateT& _text_template
 				}
 				else
 				{
-					// если нет, то переименовываем текущий в текущий с префиксом, а сортированный в текущего
 					std::filesystem::rename(_file_name, before_filename);
 					std::filesystem::rename(temp_filename, _file_name);
 				}
