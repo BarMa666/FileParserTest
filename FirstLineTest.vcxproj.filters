@@ -5,49 +5,52 @@
     <ClCompile Include="Application.cpp">
       <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>FileManager</Filter>
-    </ClCompile>
     <ClCompile Include="ParserManager.cpp">
       <Filter>ParserManager</Filter>
     </ClCompile>
-    <ClCompile Include="ThreadManager.cpp">
-      <Filter>ThreadManager</Filter>
+    <ClCompile Include="SettingsManager.cpp">
+      <Filter>SettingsManager</Filter>
     </ClCompile>
-    <ClCompile Include="ParserWorker.cpp">
-      <Filter>ParserManager</Filter>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Worker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Application">
       <UniqueIdentifier>{9a3f51c0-bc35-4650-a0f5-26bc2fd0b71b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FileManager">
-      <UniqueIdentifier>{09b0c9bd-9724-48a4-b548-7fc76d28e276}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ParserManager">
       <UniqueIdentifier>{4d1566e4-a913-49ff-9643-a0d7ebb8c4da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThreadManager">
-      <UniqueIdentifier>{f8963f4c-d246-423f-9170-6142708c9dd0}</UniqueIdentifier>
+    <Filter Include="SettingsManager">
+      <UniqueIdentifier>{0e77e2ba-a86d-4da3-a9e6-36395895de3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{cfa66219-4d16-4134-af63-082f0c7beda3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Worker">
+      <UniqueIdentifier>{0e65201f-6ec9-4b51-a266-9f36c06426fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>FileManager</Filter>
-    </ClInclude>
     <ClInclude Include="ParserManager.h">
       <Filter>ParserManager</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadManager.h">
-      <Filter>ThreadManager</Filter>
-    </ClInclude>
-    <ClInclude Include="ParserWorker.h">
-      <Filter>ParserManager</Filter>
-    </ClInclude>
     <ClInclude Include="Primitives.h" />
+    <ClInclude Include="SettingsManager.h">
+      <Filter>SettingsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Worker</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

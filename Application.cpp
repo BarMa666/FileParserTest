@@ -1,62 +1,67 @@
 #include "Application.h"
-
-#include "FileManager.h"
-#include "ThreadManager.h"
 #include "ParserManager.h"
+#include "SettingsManager.h"
+#include "Logger.h"
+
+#ifdef _TEST
+#include "Parser.h"
+#endif
 
 #include <iostream>
+#include <cassert>
+#include <filesystem>
+#include <chrono>
 
-// Имя файла конфига настроек
-static const std::wstring CONFIG_FILENAME = L"settings.conf";
+#define NO_LESS_THAN_ONE(x) (x == 0) ? 1 : x
 
-Application::Application()
-	: m_file_manager(std::make_shared<FileManager>())
-	, m_thread_manager(std::make_shared<ThreadManager>())
-	, m_parser_manager(std::make_shared<ParserManager>())
+Application::AppRetCode Application::exec() noexcept
 {
-}
-
-Application::RetCode Application::init() noexcept
-{
-	RetCode ret = RetCode::Ok;
+	AppRetCode ret = AppRetCode::Ok;
 	try
 	{
-		Settings settings = readSettings();
-		m_file_manager->init(std::forward<std::wstring>(settings.root));
-		m_thread_manager->init(std::forward<unsigned>(settings.threads_count));
-		m_parser_manager->init(std::forward<TextTemplatesT>(settings.text_templates));
+		SettingsManager settings_manager;
+		auto settings = settings_manager.readSettings();
+		if (settings_manager.hasEmptySettings(settings))
+		{
+			return AppRetCode::NoSettings;
+		}
+		{
+			ParserManager parser(settings.threads_count, std::move(settings.text_templates));
+			parser.start();
+#ifdef _DEBUG
+			auto start = std::chrono::steady_clock::now();
+#endif
+			for (const auto& file_name : std::filesystem::recursive_directory_iterator(settings.root))
+			{
+				parser.put(std::move(file_name.path().string()));
+			}
+#ifdef _DEBUG
+			auto end = std::chrono::steady_clock::now();
+			std::cout << (end - start).count() << "\n";
+#endif
+		}
+		std::cout << "All done!\n";
+#ifndef _DEBUG
+		std::cin.get();
+#endif
 	}
 	catch (const std::exception& _ex)
 	{
-		std::cerr << _ex.what();
+		Logger::logError(_ex.what());
+		ret = AppRetCode::Error;																	
 	}
 	return ret;
 }
 
-Application::RetCode Application::exec() noexcept
+#ifdef _TEST
+Application::AppRetCode Application::test()
 {
-	RetCode ret = RetCode::Ok;
-	try
-	{
-		// Считаем общий размер файлов в корневой директории(FileManager)
-		// auto files_size = m_file_manager->getAllFileSize();
-		// Считаем размер пула потоков(ThreadManager)
-		// auto thread_count = m_thread_manager->getThreadsCount();
-		// Формируем части для обработки (ParserManager)
-			// Частей не больше чем потоков, размер части зависит от кол-ва файлов и их общего размера
-			// auto maximum_part_size = m_parser_manager->calculatePartsCount(files_size, thread_count)
-		//  
-			
-		// Для каждой части запускаем свой поток (ThreadManager)
-	}
-	catch (const std::exception& _ex)
-	{
-		std::cerr << _ex.what();
-	}
-	return ret;
+	SettingsManager settings_manager;
+	auto settings = settings_manager.readSettings();
+	assert(!settings_manager.hasEmptySettings(settings));
+	auto text_templates = settings.text_templates;
+	Parser parser(std::move(ParserManager::getMaxTemplateSize(text_templates)));
+	parser.testParse();
+	return AppRetCode::Ok;
 }
-
-Settings Application::readSettings()
-{
-	// read data from config file
-}
+#endif

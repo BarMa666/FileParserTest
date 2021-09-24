@@ -1,12 +1,5 @@
 ﻿
-#include <iostream>
-#include <vector>
-#include <string>
-#include <cstring>
-#include <thread>
-#include <filesystem>
-#include <map>
-#include <fstream>
+#include "Application.h"
 
 /*
         Описание задания
@@ -30,14 +23,10 @@
 
 int main()
 {
-    
-    // Считать конфиг, сохранив информацию в требуемом виде:
-    // ThreadCount = Количество потоков на парсинг файлов
-    // Root = Адрес корневой директории с файлами и папками
-    // Templates = Перечисление шаблонов и их замен(неограниченное количество)
-
-    // Application  - Класс по организации работы приложения(менеджмент потоков)
-    // FileManager  - Класс по работе с директориями и файлами(прочитать часть файла, например)
-    // Parser       - Класс парсер - основная логика
-    return 0;
+    Application app;
+#ifdef _TEST
+    return app.test();
+#else
+    return app.exec();
+#endif
 }

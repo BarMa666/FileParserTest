@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
-#include <thread>
+#include "Parser.h"
 
-class ThreadManager
+#include <vector>
+
+class ParsersHolder
 {
 public:
-	void init(unsigned _thread_count);
 
 private:
 	std::vector<std::thread> m_threads;
