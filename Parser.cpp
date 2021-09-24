@@ -14,65 +14,54 @@ Parser::~Parser() noexcept
 {
 }
 
-// идея теста такова: 
-// если после парсинга файла его прогнать парсером в обратном направлении,
-// то должен получится изначальный файл
-// @REFME выделить часть логики в отдельные функции
-void Parser::testParse() const
-{
-	static const std::string befor_extension = ".before";
-	TextTemplateT templates = loadTestTemplates();
-	// key is a file before parsing and value is already parsed file
-	std::list<std::string> file_names = loadTestFileNames();
-	
-	// copy files to save state before parsing
-	for (const auto& name : file_names)
-	{
-		std::string before_filename = name.substr(0, name.find_last_of('.')) + befor_extension;
-		parseFile(name, before_filename, {});
-	}
-	
-	// parse files
-	for (auto&& name : file_names)
-	{
-		parse(std::move(name), templates);
-	}
-
-	// reverse templates
-	TextTemplateT reversed_templates;
-	for (const auto& [key, value] : templates)
-	{
-		reversed_templates[value] = key;
-	}
-
-	// check parsing
-	for (auto&& name : file_names)
-	{
-		parse(std::move(name), reversed_templates);
-	}
-
-	// compare
-	assert(compare(file_names, befor_extension));
-	std::cout << "Parse test past good\n";
-}
-
 void Parser::parse(std::string&& _file_name, const TextTemplateT& _text_templates) const noexcept
 {
 	try
 	{
-		std::string temp_filename = _file_name.substr(0, _file_name.find_last_of('.')) + "_temp" + _file_name.substr(_file_name.find_last_of('.'));
-		if (parseFile(_file_name, temp_filename, _text_templates))
-		{
-			if (!std::filesystem::remove(_file_name))
-			{
-				std::cout << _file_name << " fail to remove\n";
-			}
-			std::filesystem::rename(temp_filename, _file_name);
+#ifdef _TEST
+		// есть префикс
+		if (_file_name.find(TEST_POSTFIX) != std::string::npos)
+		{	
+			// пропускаем 
+			return;
 		}
+		// нет префикса
 		else
 		{
-			std::filesystem::rename(temp_filename, temp_filename + "[parsing failed]");
+#endif
+			std::string temp_filename = _file_name.substr(0, _file_name.find_last_of('.')) + "_temp" + _file_name.substr(_file_name.find_last_of('.'));
+			// сортируем
+			if (parseFile(_file_name, temp_filename, _text_templates))
+			{
+#ifdef _TEST
+				std::string before_filename = _file_name.substr(0, _file_name.find_last_of('.')) + TEST_POSTFIX + _file_name.substr(_file_name.find_last_of('.'));
+				// смотрим есть ли уже с таким префиксом 
+				if (std::filesystem::exists(before_filename))
+				{
+#endif
+					// если есть, то переименовываем сортированного и текущего, сортированный удаляем
+					if (!std::filesystem::remove(_file_name))
+					{
+						std::cout << _file_name << " fail to remove\n";
+					}
+					std::filesystem::rename(temp_filename, _file_name);
+#ifdef _TEST
+				}
+				else
+				{
+					// если нет, то переименовываем текущий в текущий с префиксом, а сортированный в текущего
+					std::filesystem::rename(_file_name, before_filename);
+					std::filesystem::rename(temp_filename, _file_name);
+				}
+#endif
+			}
+			else
+			{
+				std::filesystem::rename(temp_filename, temp_filename + "[parsing failed]");
+			}
+#ifdef _TEST
 		}
+#endif
 	}
 	catch (const std::exception& _ex)
 	{
@@ -150,67 +139,6 @@ bool Parser::replaceTemplates(OUT std::string& _line, const std::string& _templa
 		catch (const std::exception& _ex)
 		{
 			Logger::logError(_ex.what());
-			return false;
-		}
-	}
-	return true;
-}
-
-TextTemplateT Parser::loadTestTemplates() const noexcept
-{
-	TextTemplateT res;
-	FileHolder test_settings("parser_test_settings.conf");
-	if (test_settings.is_open())
-	{
-		std::string line;
-		std::string templates_string;
-		while (std::getline(test_settings, line))
-		{
-			templates_string += line;
-		}
-		SettingsManager settings_manager;
-		res = settings_manager.readTextTemplates(templates_string);
-	}
-	return res;
-}
-
-std::list<std::string> Parser::loadTestFileNames() const noexcept
-{
-	FileHolder test_settings("parser_test_filenames.conf");
-	if (test_settings.is_open())
-	{
-		std::string line;
-		std::list<std::string> filenames_string;
-		while (std::getline(test_settings, line))
-		{
-			filenames_string.emplace_back(std::move(line));
-		}
-		return filenames_string;
-	}
-	return std::list<std::string>();
-}
-
-bool Parser::compare(const std::list<std::string>& _file_names, const std::string& _befor_extension) const noexcept
-{
-	for (const auto& name : _file_names)
-	{
-		FileHolder file(name);
-		std::string before_filename = name.substr(0, name.find_last_of('.')) + _befor_extension;
-		FileHolder before_file(before_filename);
-		std::string data;
-		std::string before_data;
-		std::string line;
-		while (std::getline(file, line, '\0'))
-		{
-			data += line + "\n";
-		}
-		while (std::getline(before_file, line, '\0'))
-		{
-			before_data += line + "\n";
-		}
-		assert(!data.empty());
-		if (before_data != data)
-		{
 			return false;
 		}
 	}
